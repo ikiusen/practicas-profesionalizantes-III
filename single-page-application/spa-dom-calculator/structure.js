@@ -130,6 +130,11 @@ display.classList.add("inputBox");
 function setElementOnTable(table, row, column, element){
     table.childNodes[0].childNodes[row].childNodes[column].appendChild(element);
 }
+function setFullLengthElementOnTable(table, element){
+    let row = table.insertRow().insertCell();
+    row.appendChild(element);
+    row.colSpan = 4;
+}
 function displayValue(e){
     display.innerText += e.target.innerText;
 }
@@ -141,10 +146,7 @@ function doOperation(){
 }
 
 //------------------------------------------
-
-let displayRow = calculatorBody.insertRow().insertCell();
-displayRow.appendChild(display);
-displayRow.colSpan = 4;
+setFullLengthElementOnTable(calculatorBody, display);
 
 for(let i = 0; i < 4; i++)
 {
@@ -154,9 +156,7 @@ for(let i = 0; i < 4; i++)
         row.insertCell();
     }
 }
-let deleteButtonRow = calculatorBody.insertRow().insertCell();
-deleteButtonRow.appendChild(btnDel);
-deleteButtonRow.colSpan = 4;
+setFullLengthElementOnTable(calculatorBody, btnDel);
 
 setElementOnTable(calculatorBody, 1, 0, btn7);
 setElementOnTable(calculatorBody, 1, 1, btn8);
