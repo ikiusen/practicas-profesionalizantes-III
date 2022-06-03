@@ -15,6 +15,7 @@ let btnDiv = document.getElementById("btnDiv");
 let btnDecimal = document.getElementById("btnDecimal");
 let btnEqual = document.getElementById("btnEqual");
 let btnDel = document.getElementById("btnDel");
+let display = document.getElementById("inputBox");
 
 btn0.addEventListener("click", displayValue);
 btn1.addEventListener("click", displayValue);
@@ -34,7 +35,6 @@ btnDecimal.addEventListener("click", displayValue);
 btnEqual.addEventListener("click", doOperation);
 btnDel.addEventListener("click", clearDisplay);
 
-let display = document.getElementById("inputBox");
 function displayValue(e){
     display.innerText += e.target.innerText;
 }
