@@ -23,103 +23,87 @@ let calculatorBody = document.createElement("table");
 
 btn0.id = "btn0";
 btn0.innerText = "0";
-btn0.classList.add("buttons");
-btn0.classList.add("numericButtons");
+btn0.classList.add("buttons", "numericButtons");
 btn0.addEventListener("click", displayValue);
 
 btn1.id = "btn1";
 btn1.innerText = "1";
-btn1.classList.add("buttons");
-btn1.classList.add("numericButtons");
+btn1.classList.add("buttons", "numericButtons");
 btn1.addEventListener("click", displayValue);
 
 btn2.id = "btn2";
 btn2.innerText = "2";
-btn2.classList.add("buttons");
-btn2.classList.add("numericButtons");
+btn2.classList.add("buttons", "numericButtons");
 btn2.addEventListener("click", displayValue);
 
 btn3.id = "btn3";
 btn3.innerText = "3";
-btn3.classList.add("buttons");
-btn3.classList.add("numericButtons");
+btn3.classList.add("buttons", "numericButtons");
 btn3.addEventListener("click", displayValue);
 
 btn4.id = "btn4";
 btn4.innerText = "4";
-btn4.classList.add("buttons");
-btn4.classList.add("numericButtons");
+btn4.classList.add("buttons", "numericButtons");
 btn4.addEventListener("click", displayValue);
 
 btn5.id = "btn5";
 btn5.innerText = "5";
-btn5.classList.add("buttons");
-btn5.classList.add("numericButtons");
+btn5.classList.add("buttons", "numericButtons");
 btn5.addEventListener("click", displayValue);
 
 btn6.id = "btn6";
 btn6.innerText = "6";
-btn6.classList.add("buttons");
-btn6.classList.add("numericButtons");
+btn6.classList.add("buttons", "numericButtons");
 btn6.addEventListener("click", displayValue);
 
 btn7.id = "btn7";
 btn7.innerText = "7";
-btn7.classList.add("buttons");
-btn7.classList.add("numericButtons");
+btn7.classList.add("buttons", "numericButtons");
 btn7.addEventListener("click", displayValue);
 
 btn8.id = "btn8";
 btn8.innerText = "8";
-btn8.classList.add("buttons");
-btn8.classList.add("numericButtons");
+btn8.classList.add("buttons", "numericButtons");
 btn8.addEventListener("click", displayValue);
 
 btn9.id = "btn9";
 btn9.innerText = "9";
-btn9.classList.add("buttons");
-btn9.classList.add("numericButtons");
+btn9.classList.add("buttons", "numericButtons");
 btn9.addEventListener("click", displayValue);
 
 btnPlus.id = "btnPlus";
 btnPlus.innerText = "+";
-btnPlus.classList.add("buttons");
-btnPlus.classList.add("operationButtons");
+btnPlus.classList.add("buttons", "operationButtons");
 btnPlus.addEventListener("click", displayValue);
 
 btnMinus.id = "btnMinus";
 btnMinus.innerText = "-";
-btnMinus.classList.add("buttons");
-btnMinus.classList.add("operationButtons");
+btnMinus.classList.add("buttons", "operationButtons");
 btnMinus.addEventListener("click", displayValue);
 
 btnMult.id = "btnMult";
 btnMult.innerText = "*";
-btnMult.classList.add("buttons");
-btnMult.classList.add("operationButtons");
+btnMult.classList.add("buttons", "operationButtons");
 btnMult.addEventListener("click", displayValue);
 
 btnDiv.id = "btnDiv";
 btnDiv.innerText = "/";
-btnDiv.classList.add("buttons");
-btnDiv.classList.add("operationButtons");
+btnDiv.classList.add("buttons", "operationButtons");
 btnDiv.addEventListener("click", displayValue);
 
 btnDecimal.id = "btnDecimal";
 btnDecimal.innerText = ".";
-btnDecimal.classList.add("buttons");
-btnDecimal.classList.add("numericButtons");
+btnDecimal.classList.add("buttons", "numericButtons");
 btnDecimal.addEventListener("click", displayValue);
 
 btnEqual.id = "btnEqual";
 btnEqual.innerText = "=";
-btnEqual.classList.add("buttons");
-btnEqual.classList.add("equalButton");
+btnEqual.classList.add("buttons", "equalButton");
 btnEqual.addEventListener("click", doOperation);
 
 btnDel.id = "btnDel";
 btnDel.innerText = "Delete";
-btnDel.classList.add("deletionButton");
+btnDel.classList.add("deleteButton");
 btnDel.addEventListener("click", clearDisplay);
 
 display.id = "inputBox"
@@ -142,7 +126,11 @@ function clearDisplay(){
     display.innerText = "";
 }
 function doOperation(){
-    display.innerText = eval(display.innerText);
+    try {
+        display.innerText = eval(display.innerText);    
+    } catch (error) {
+        alert("Error: intente nuevamente");
+    }
 }
 
 //------------------------------------------

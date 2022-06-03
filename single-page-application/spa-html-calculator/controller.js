@@ -42,5 +42,9 @@ function clearDisplay(){
     display.innerText = "";
 }
 function doOperation(){
-    display.innerText = eval(display.innerText);
+    try {
+        display.innerText = eval(display.innerText);    
+    } catch (error) {
+        alert("Error: intente nuevamente");
+    }
 }
