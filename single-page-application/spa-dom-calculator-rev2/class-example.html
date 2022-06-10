@@ -37,9 +37,11 @@
 
     class CalculatorView extends HTMLElement
     {
-        constructor(controller)
+        constructor()
         {
             super();
+
+            this.controller = (this, new Calculator);
 
             this.btn0 = document.createElement("button");
             this.btn1 = document.createElement("button");
@@ -64,7 +66,8 @@
             this.btn0.id = "btn0";
             this.btn0.innerText = "0";
             this.btn0.classList.add("buttons", "numericButtons");
-            //this.btn0.addEventListener("click", displayValue);
+            this.btn0.addEventListener("click", this.controller.displayValue);
+            
             
             this.btn1.id = "btn1";
             this.btn1.innerText = "1";
@@ -139,7 +142,7 @@
             this.btnEqual.id = "btnEqual";
             this.btnEqual.innerText = "=";
             this.btnEqual.classList.add("buttons", "equalButton");
-            //this.btnEqual.addEventListener("click", doOperation);
+            this.btnEqual.addEventListener("click", this.controller.calculate);
             
             this.btnDel.id = "btnDel";
             this.btnDel.innerText = "Delete";
@@ -184,15 +187,31 @@
             setElementOnTable(this.layout, 4, 2, this.btnEqual);
             setElementOnTable(this.layout, 4, 3, this.btnDiv);
             
+            
             this.appendChild(this.layout);
         }
     }
 
 class CalculatorController
 {
-    constructor()
+    constructor(view, model)
     {
+        this.view = view;
+        this.model = model;
     }
+
+
+    displayValue(e){
+        this.view.display.innerText += e.target.innerText;
+    }
+    clearDisplay(){
+        this.view.display.innerText = "";
+    }
+    calculate(){
+        this.view.display.innerText = this.model.calculate(this.view.display.innerText);
+    }
+
+
 }
 
 customElements.define('x-calculator', CalculatorView);
