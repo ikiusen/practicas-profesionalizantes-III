@@ -32,87 +32,87 @@ class CalculatorView extends HTMLElement
         this.btn0.id = "btn0";
         this.btn0.innerText = "0";
         this.btn0.classList.add("buttons", "numericButtons");
-        this.btn0.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn0.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
                 
         this.btn1.id = "btn1";
         this.btn1.innerText = "1";
         this.btn1.classList.add("buttons", "numericButtons");
-        this.btn1.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn1.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn2.id = "btn2";
         this.btn2.innerText = "2";
         this.btn2.classList.add("buttons", "numericButtons");
-        this.btn2.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn2.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn3.id = "btn3";
         this.btn3.innerText = "3";
         this.btn3.classList.add("buttons", "numericButtons");
-        this.btn3.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn3.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn4.id = "btn4";
         this.btn4.innerText = "4";
         this.btn4.classList.add("buttons", "numericButtons");
-        this.btn4.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn4.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn5.id = "btn5";
         this.btn5.innerText = "5";
         this.btn5.classList.add("buttons", "numericButtons");
-        this.btn5.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn5.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn6.id = "btn6";
         this.btn6.innerText = "6";
         this.btn6.classList.add("buttons", "numericButtons");
-        this.btn6.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn6.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn7.id = "btn7";
         this.btn7.innerText = "7";
         this.btn7.classList.add("buttons", "numericButtons");
-        this.btn7.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn7.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn8.id = "btn8";
         this.btn8.innerText = "8";
         this.btn8.classList.add("buttons", "numericButtons");
-        this.btn8.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn8.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btn9.id = "btn9";
         this.btn9.innerText = "9";
         this.btn9.classList.add("buttons", "numericButtons");
-        this.btn9.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btn9.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnPlus.id = "btnPlus";
         this.btnPlus.innerText = "+";
         this.btnPlus.classList.add("buttons", "operationButtons");
-        this.btnPlus.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btnPlus.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnMinus.id = "btnMinus";
         this.btnMinus.innerText = "-";
         this.btnMinus.classList.add("buttons", "operationButtons");
-        this.btnMinus.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btnMinus.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnMult.id = "btnMult";
         this.btnMult.innerText = "*";
         this.btnMult.classList.add("buttons", "operationButtons");
-        this.btnMult.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btnMult.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnDiv.id = "btnDiv";
         this.btnDiv.innerText = "/";
         this.btnDiv.classList.add("buttons", "operationButtons");
-        this.btnDiv.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btnDiv.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnDecimal.id = "btnDecimal";
         this.btnDecimal.innerText = ".";
         this.btnDecimal.classList.add("buttons", "numericButtons");
-        this.btnDecimal.addEventListener("click", (e)=>this.controller.displayValue(e) );
+        this.btnDecimal.addEventListener("click", (e)=>this.controller.onButtonClick(e) );
             
         this.btnEqual.id = "btnEqual";
         this.btnEqual.innerText = "=";
         this.btnEqual.classList.add("buttons", "equalButton");
-        this.btnEqual.addEventListener("click", (e)=>this.controller.calculate(e));
+        this.btnEqual.addEventListener("click", (e)=>this.controller.onCalculateClick(e));
             
         this.btnDel.id = "btnDel";
         this.btnDel.innerText = "Delete";
         this.btnDel.classList.add("deleteButton");
-        this.btnDel.addEventListener("click", (e)=>this.controller.clearDisplay());
+        this.btnDel.addEventListener("click", (e)=>this.controller.onDeleteClick());
             
         this.display.id = "inputBox"
         this.display.classList.add("inputBox");

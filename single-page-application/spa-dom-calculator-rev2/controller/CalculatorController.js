@@ -20,14 +20,15 @@ class CalculatorController
     Estos métodos los podés poner en la vista, y utilizarlos desde acá
     como opción.
     */
-
-    displayValue(e){
+    
+    //15/06/22 - Ajustados los nombres de los eventos
+    onButtonClick(e){
         this.view.display.innerText += e.target.innerText;
     }
-    clearDisplay(){
+    onDeleteClick(){
         this.view.display.innerText = "";
     }
-    calculate(){
+    onCalculateClick(){
         this.view.display.innerText = this.model.calculate(this.view.display.innerText);
     }
 }
