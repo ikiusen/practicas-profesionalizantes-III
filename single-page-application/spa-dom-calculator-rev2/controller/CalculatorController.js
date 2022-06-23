@@ -1,7 +1,5 @@
-class CalculatorController
-{
-    constructor(view, model)
-    {
+class CalculatorController {
+    constructor(view, model) {
         this.view = view;
         this.model = model;
     }
@@ -20,17 +18,17 @@ class CalculatorController
     Estos métodos los podés poner en la vista, y utilizarlos desde acá
     como opción.
     */
-    
+
     //15/06/22 - Ajustados los nombres de los eventos
-    onButtonClick(e){
+    onButtonClick(e) {
         this.view.display.innerText += e.target.innerText;
     }
-    onDeleteClick(){
+    onDeleteClick() {
         this.view.display.innerText = "";
     }
-    onCalculateClick(){
+    onCalculateClick() {
         this.view.display.innerText = this.model.calculate(this.view.display.innerText);
     }
 }
 
-export {CalculatorController};
+export { CalculatorController };

@@ -1,19 +1,17 @@
 //perfecto!
 
-class CalculatorClientModel
-{
-    constructor(){}
+class CalculatorClientModel {
+    constructor() { }
 
-    calculate(expression)
-    {
+    calculate(expression) {
         let value = "";
         try {
-            value = eval(expression);    
+            value = eval(expression);
         } catch (error) {
             alert("Error: intente nuevamente");
         }
         return value;
-        }
+    }
 }
 
-export {CalculatorClientModel};
+export { CalculatorClientModel };

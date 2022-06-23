@@ -35,15 +35,15 @@ btnDecimal.addEventListener("click", displayValue);
 btnEqual.addEventListener("click", doOperation);
 btnDel.addEventListener("click", clearDisplay);
 
-function displayValue(e){
+function displayValue(e) {
     display.innerText += e.target.innerText;
 }
-function clearDisplay(){
+function clearDisplay() {
     display.innerText = "";
 }
-function doOperation(){
+function doOperation() {
     try {
-        display.innerText = eval(display.innerText);    
+        display.innerText = eval(display.innerText);
     } catch (error) {
         alert("Error: intente nuevamente");
     }
