@@ -2,7 +2,7 @@ class CalculatorServerModel {
     constructor() { }
 
     calculate(expression) {
-        return fetch('./backend/test.php', { method: 'POST', body: expression }).then(response => response.text());
+        return fetch('./backend/calculate.php', { method: 'POST', body: JSON.stringify(expression) }).then(response => response.json());
     }
 }
 
