@@ -2,10 +2,10 @@ class ModalDialog extends HTMLElement {
     constructor() {
         super();
 
-        this.classList.add("w3-modal");
+        this.classList.add("w3-modal", "w3-center");
 
         this.innerContent = document.createElement('div');
-        this.innerContent.classList.add("w3-modal-content", "w3-container");
+        this.innerContent.classList.add("w3-modal-content", "w3-animate-opacity", "w3-center"); //, "w3-container");
 
         this.confirmButton = document.createElement('button');
         this.confirmButton.innerText = 'Confirm';
@@ -20,7 +20,7 @@ class ModalDialog extends HTMLElement {
         this.appendChild(this.innerContent);
         this.appendChild(this.confirmButton);
         this.appendChild(this.cancelButton);
-
+        
         this.confirmButton.addEventListener('click', () => this.hide());
         this.cancelButton.addEventListener('click', () => this.hide());
     }
@@ -37,7 +37,6 @@ class ModalDialog extends HTMLElement {
     hide() {
         this.style.display = 'none';
     }
-
 }
 
 customElements.define('x-modal-dialog', ModalDialog)
