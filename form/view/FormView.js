@@ -1,23 +1,4 @@
-class FormModel {
-    constructor() {
-    }
-
-    submit(data) {
-        return fetch('./backend/login.php', { method: 'POST', body: JSON.stringify(data) }).then(response => { response.json() });
-    }
-}
-
-class FormController {
-    constructor(view, model) {
-        this.view = view;
-        this.model = model;
-    }
-
-    onSubmit(){
-        this.model.submit(this.view.getFormData()).then(response => {/*algo*/});
-    }
-
-}
+import { FormController } from '../controller/FormController.js';
 
 class FormView extends HTMLElement {
     constructor(model) {

@@ -14,15 +14,24 @@ class ModalDialog extends HTMLElement {
         this.cancelButton = document.createElement('button');
         this.cancelButton.innerText = 'Cancel';
         this.cancelButton.classList.add("w3-button", "w3-black")
+
+        this.confirmAction = null;
+        this.cancelAction = null;
     }
 
     connectedCallback() {
         this.appendChild(this.innerContent);
         this.appendChild(this.confirmButton);
         this.appendChild(this.cancelButton);
-        
-        this.confirmButton.addEventListener('click', () => this.hide());
-        this.cancelButton.addEventListener('click', () => this.hide());
+
+        this.confirmButton.addEventListener('click', () => {
+            this.confirmAction();
+            this.hide();
+        });
+        this.cancelButton.addEventListener('click', () => {
+            this.cancelAction();
+            this.hide();
+        });
     }
 
     disconnectedCallback() {
