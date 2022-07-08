@@ -5,7 +5,7 @@ class FormController {
     }
 
     onSubmit() {
-        this.model.submit(this.view.getFormData()).then(response => {/*algo*/ });
+        this.model.submit(this.view.getFormData()).then(response => { alert(response); });
     }
 
 }
