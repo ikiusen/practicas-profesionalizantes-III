@@ -3,8 +3,8 @@ class FormModel {
     }
 
     submit(data) {
-        //toDO fix path
-        return fetch('./backend/login.php', { method: 'POST', body: JSON.stringify(data) }).then(response => response.json());
+        //fixed path to work with modal-dialog-window [index-modal.html]
+        return fetch('../form/backend/login.php', { method: 'POST', body: JSON.stringify(data) }).then(response => response.json());
     }
 }
 

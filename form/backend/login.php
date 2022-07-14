@@ -2,7 +2,7 @@
 $input = json_decode(file_get_contents('php://input'));
 
 function login($data) {
-    return ('Welcome'.$data->{'username'}.'!!');
+    return ('Welcome '.$data->{'username'}.'!!');
 }
 
 $response = login($input);
