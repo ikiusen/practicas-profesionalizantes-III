@@ -4,27 +4,27 @@ import { Header } from '../../header/view/Header.js';
 import { Footer } from '../../footer/view/Footer.js';
 import { ApplicationController } from '../controller/ApplicationController.js';
 class Application extends HTMLElement {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.controller = new ApplicationController(this);
+    this.controller = new ApplicationController(this);
 
-        this.navBar = new NavigationBar();
-        this.navBar.appendItem("One", "#");
-        this.navBar.appendItem("Two", "#");
-        this.navBar.appendItem("Three", "#");
-        this.itemList = this.navBar.appendItemList();
-        this.itemList.appendItem("Sub-One", "#");
-        this.itemList.appendItem("Sub-Two", "#");
-        this.itemList.appendItem("Sub-Three", "#");
-        this.topBar = new TopBar();
-        this.header = new Header();
-        this.footer = new Footer();
-        this.applicationBody = document.createElement("div");
-        this.applicationBody.classList.add("w3-main");
-        this.applicationBody.style.marginLeft = "250px";
-        this.content1 = document.createElement("div");
-        this.content1.innerHTML = `<h2>What is W3.CSS?</h2>
+    this.navBar = new NavigationBar();
+    this.navBar.appendItem("One", "#");
+    this.navBar.appendItem("Two", "#");
+    this.navBar.appendItem("Three", "#");
+    this.itemList = this.navBar.appendItemList();
+    this.itemList.appendItem("Sub-One", "#");
+    this.itemList.appendItem("Sub-Two", "#");
+    this.itemList.appendItem("Sub-Three", "#");
+    this.topBar = new TopBar();
+    this.header = new Header();
+    this.footer = new Footer();
+    this.applicationBody = document.createElement("div");
+    this.applicationBody.classList.add("w3-main");
+    this.applicationBody.style.marginLeft = "250px";
+    this.content1 = document.createElement("div");
+    this.content1.innerHTML = `<h2>What is W3.CSS?</h2>
 
         <p>W3.CSS is a modern CSS framework with built-in responsiveness:</p>
         
@@ -88,18 +88,21 @@ class Application extends HTMLElement {
         </div>
         </div>`;
 
-        this.applicationBody.appendChild(this.topBar);
-        this.applicationBody.appendChild(this.header);
-        this.applicationBody.appendChild(this.content1);
-        this.applicationBody.appendChild(this.footer);
-    }
+    this.applicationBody.appendChild(this.topBar);
+    this.applicationBody.appendChild(this.header);
+    this.applicationBody.appendChild(this.content1);
+    this.applicationBody.appendChild(this.footer);
+  }
 
-    connectedCallback() {
-        window.onscroll = () => this.controller.onWindowScroll();
+  connectedCallback() {
+    window.onscroll = () => this.controller.onWindowScroll();
 
-        this.appendChild(this.navBar);
-        this.appendChild(this.applicationBody);
-    }
+    this.appendChild(this.navBar);
+    this.appendChild(this.applicationBody);
+  }
+  showNavigationBar() {
+    this.navBar.controller.openNavigationBar();
+  }
 }
 customElements.define('x-application', Application);
 export { Application };

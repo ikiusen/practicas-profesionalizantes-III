@@ -4,7 +4,11 @@ class NavigationBarController {
     }
 
     onCloseItemClick() {
-        this.view.style.display = "none";
+        this.view.navigationBarBody.style.display = "none";
+    }
+
+    openNavigationBar() {
+        this.view.navigationBarBody.style.display = "block";
     }
 }
 

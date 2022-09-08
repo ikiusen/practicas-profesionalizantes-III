@@ -21,9 +21,9 @@ class NavigationBar extends HTMLElement {
         this.logoContainer.appendChild(this.img);
 
         this.closeItem = document.createElement("a");
-        this.closeItem.classList.add("w3-bar-item", "w3-button", "w3-hide-large", "w3-large")
+        this.closeItem.classList.add("w3-bar-item", "w3-button", "w3-hide-large", "w3-large");
+        this.closeItem.href = "#";
         this.closeItem.innerText = "Close";
-        this.closeItem.href = "";
 
         this.homeItem = document.createElement("a");
         this.homeItem.classList.add("w3-bar-item", "w3-button", "w3-teal");
@@ -36,7 +36,7 @@ class NavigationBar extends HTMLElement {
     }
 
     connectedCallback() {
-        this.closeItem.addEventListener("click", () => onCloseItemClick());
+        this.closeItem.addEventListener("click", () => this.controller.onCloseItemClick());
         this.appendChild(this.navigationBarBody);
     }
 

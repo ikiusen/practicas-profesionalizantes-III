@@ -3,5 +3,9 @@ class TopBarController {
         this.view = view;
     }
 
+    onTopBarButtonClick() {
+        window.app.showNavigationBar();
+    }
+
 }
 export {TopBarController};
