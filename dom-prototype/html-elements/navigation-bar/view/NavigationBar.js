@@ -9,8 +9,8 @@ class NavigationBar extends HTMLElement {
         this.navigationBarBody = document.createElement("nav");
         this.navigationBarBody.classList.add("w3-sidebar", "w3-bar-block", "w3-collapse", "w3-animate-left", "w3-card");
         this.navigationBarBody.style.zIndex = 3;
-        this.navigationBarBody.style.width ="250px";
-        
+        this.navigationBarBody.style.width = "250px";
+
         this.img = document.createElement("img");
         this.img.src = "files/example.png";
         this.img.style.width = "80%";
