@@ -13,14 +13,12 @@ DELIMITER ;;
 
 CREATE PROCEDURE `authenticate_user`(IN `username` varchar(45), IN `password` varchar(45))
 SELECT id FROM user
-WHERE user.username = username AND user.password = password;;
+WHERE user.name = username AND user.password = password;;
 
-CREATE PROCEDURE `create_user_session`(IN `username` varchar(45), IN `password` varchar(45))
+CREATE PROCEDURE `create_user_session`(IN `id_user` int, IN `token` varchar(256))
 BEGIN
-
-/*DECLARE id_user INT DEFAULT 0;
-INSERT INTO user_session(token, NOW(), 'expDate', id_user);*/
-
+INSERT INTO user_session(token, created, expires, id_user) 
+VALUES (token, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), id_user);
 END;;
 
 DELIMITER ;
@@ -104,5 +102,7 @@ CREATE TABLE `user_session` (
   CONSTRAINT `user_session_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `user_session` (`id`, `token`, `created`, `expires`, `id_user`) VALUES
+(4,	'daa6691175c23dd386c90a57d4d309c4f42a472d74ac55c1e114ce2cadfe1b90',	'2022-09-28 19:09:55',	'2022-09-29 19:09:55',	14);
 
--- 2022-09-28 15:09:27
+-- 2022-10-04 13:44:07
