@@ -1,4 +1,4 @@
--- Adminer 4.8.1 MySQL 8.0.29 dump
+-- Adminer 4.8.1 MySQL 5.5.5-10.3.36-MariaDB-0+deb10u2 dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -6,7 +6,7 @@ SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP DATABASE IF EXISTS `isft-db`;
-CREATE DATABASE `isft-db` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE `isft-db` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `isft-db`;
 
 DELIMITER ;;
@@ -146,6 +146,19 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
    COMMIT;
 END;;
 
+CREATE PROCEDURE `usp_create_user_session`(IN `user_id` int, IN `token` varchar(256))
+BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+   BEGIN
+            ROLLBACK;
+            RESIGNAL;
+   END;
+   START TRANSACTION;
+        INSERT INTO user_session(token, created, expires, user_id) 
+        VALUES (token, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), user_id);
+   COMMIT;
+END;;
+
 CREATE PROCEDURE `usp_delete_action`(IN `id` int)
 BEGIN
 DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -251,59 +264,66 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
    COMMIT;
 END;;
 
+CREATE PROCEDURE `usp_delete_user_session`(IN `token` varchar(256))
+DELETE FROM user_session WHERE user_session.token = token;;
+
 CREATE PROCEDURE `usp_getAll_action`()
-SELECT * FROM view_action;;
+SELECT view_action.id, view_action.name, view_action.description FROM view_action;;
 
 CREATE PROCEDURE `usp_getAll_audit`()
 BEGIN
 
-SELECT user_id, action, action_date FROM audit;
+SELECT audit.user_id, audit.action, audit.action_date FROM audit;
 
 END;;
 
 CREATE PROCEDURE `usp_getAll_degree`()
 BEGIN
 
-SELECT id, name, description, resolution FROM view_degree;
+SELECT view_degree.id, view_degree.name, view_degree.description, view_degree.resolution FROM view_degree;
 
 END;;
 
 CREATE PROCEDURE `usp_getAll_degree_subjects`()
 BEGIN
 
-SELECT degree_id, subject_id FROM degree_subjects;
+SELECT view_degree_subjects.degree_id, view_degree_subjects.name, view_degree_subjects.description, view_degree_subjects.resolution, view_degree_subjects.subject_id, view_degree_subjects.`year` FROM view_degree_subjects;
 
 END;;
 
 CREATE PROCEDURE `usp_getAll_group`()
-SELECT * FROM view_group;;
+SELECT view_group.id, view_group.name, view_group.description FROM view_group;;
 
 CREATE PROCEDURE `usp_getAll_group_permissions`()
-SELECT * FROM view_group_permissions;;
+SELECT view_group_permissions.group_id, view_group_permissions.group_name,
+view_group_permissions.group_description, view_group_permissions.action.id,
+view_group_permissions.action_name, view_group_permissions.action_description  FROM view_group_permissions;;
 
 CREATE PROCEDURE `usp_getAll_group_user_members`()
-SELECT * FROM view_group_user_members;;
+SELECT view_group_user_members.group_id, view_group_user_members.group_name,
+view_group_user_members.group_description, view_group_user_members.username FROM view_group_user_members;;
 
 CREATE PROCEDURE `usp_getAll_subject`()
 BEGIN
 
-SELECT id, name, `year` FROM view_subject;
+SELECT view_subject.id, view_subject.name, view_subject.`year` FROM view_subject;
 
 END;;
 
 CREATE PROCEDURE `usp_getAll_user`()
-SELECT * FROM view_user;;
+SELECT view_user.id, view_user.username FROM view_user;;
 
 CREATE PROCEDURE `usp_getAll_user_information`()
-SELECT * FROM view_user_information;;
+SELECT view_user_information.user_id, view_user_information.name, 
+view_user_information.surname, view_user_information.dni, view_user_information.email FROM view_user_information;;
 
 CREATE PROCEDURE `usp_get_action`(IN `id` int)
-SELECT * FROM view_action WHERE view_action.id = id;;
+SELECT view_action.id, view_action.name, view_action.description FROM view_action WHERE view_action.id = id;;
 
 CREATE PROCEDURE `usp_get_audit`(IN `user_id` int)
 BEGIN
 
-SELECT user_id, action, action_date FROM audit
+SELECT audit.user_id, audit.action, audit.action_date FROM audit
 WHERE audit.user_id = user_id;
 
 END;;
@@ -311,7 +331,7 @@ END;;
 CREATE PROCEDURE `usp_get_degree`(IN `id` int)
 BEGIN
 
-SELECT name, description, resolution FROM view_degree
+SELECT view_degree.name, view_degree.description, view_degree.resolution FROM view_degree
 WHERE view_degree.id = id;
 
 END;;
@@ -319,33 +339,40 @@ END;;
 CREATE PROCEDURE `usp_get_degree_subjects`(IN `degree_id` int, IN `subject_id` int)
 BEGIN
 
-SELECT degree_id, subject_id FROM degree_subjects
-WHERE degree_subjects.degree_id = degree_id & degree_subjects.subject_id = subject_id;
+SELECT view_degree_subjects.degree_id, view_degree_subjects.name, view_degree_subjects.description, view_degree_subjects.resolution, view_degree_subjects.subject_id, view_degree_subjects.`year` FROM view_degree_subjects
+WHERE view_degree_subjects.degree_id = degree_id AND view_degree_subjects.subject_id = subject_id;
 
 END;;
 
 CREATE PROCEDURE `usp_get_group`(IN `id` int)
-SELECT * FROM view_group WHERE view_group.id = id;;
+SELECT view_group.id, view_group.name, view_group.description FROM view_group WHERE view_group.id = id;;
 
 CREATE PROCEDURE `usp_get_group_permissions`(IN `group_id` int)
-SELECT * FROM view_group_permissions WHERE view_group_permissions.group_id = group_id;;
+SELECT view_group_permissions.group_id, view_group_permissions.group_name,
+view_group_permissions.group_description, view_group_permissions.action.id,
+view_group_permissions.action_name, view_group_permissions.action_description  FROM view_group_permissions WHERE view_group_permissions.group_id = group_id;;
 
 CREATE PROCEDURE `usp_get_group_user_members`(IN `group_id` int)
-SELECT * FROM view_group_user_members WHERE view_group_user_members.group_id = group_id;;
+SELECT view_group_user_members.group_id, view_group_user_members.group_name,
+view_group_user_members.group_description, view_group_user_members.username FROM view_group_user_members WHERE view_group_user_members.group_id = group_id;;
 
 CREATE PROCEDURE `usp_get_subject`(IN `id` int)
 BEGIN
 
-SELECT name, `year` FROM view_subject
+SELECT view_subject.name, view_subject.`year` FROM view_subject
 WHERE view_subject.id = id;
 
 END;;
 
 CREATE PROCEDURE `usp_get_user`(IN `id` int)
-SELECT * FROM view_user WHERE view_user.id = id;;
+SELECT view_user.id, view_user.username FROM view_user WHERE view_user.id = id;;
 
 CREATE PROCEDURE `usp_get_user_information`(IN `user_id` int)
-SELECT * FROM view_user_information WHERE view_user_information.user_id;;
+SELECT view_user_information.user_id, view_user_information.name, 
+view_user_information.surname, view_user_information.dni, view_user_information.email FROM view_user_information WHERE view_user_information.user_id;;
+
+CREATE PROCEDURE `usp_get_user_password_hash`(IN `username` varchar(75))
+SELECT user.id, user.password FROM user WHERE user.username = username;;
 
 CREATE PROCEDURE `usp_update_action`(IN `id` int, IN `name` varchar(75), IN `description` varchar(128))
 BEGIN
@@ -429,63 +456,66 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
    COMMIT;
 END;;
 
+CREATE PROCEDURE `usp_validate_session_token`(IN `token` varchar(256))
+SELECT user_session.id FROM user_session WHERE expires > NOW() AND user_session.token = token;;
+
 DELIMITER ;
 
 DROP TABLE IF EXISTS `action`;
 CREATE TABLE `action` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `is_deleted` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `action`;
 
 DROP TABLE IF EXISTS `audit`;
 CREATE TABLE `audit` (
-  `user_id` int NOT NULL,
-  `action` varchar(256) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `action` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `audit`;
 
 DROP TABLE IF EXISTS `degree`;
 CREATE TABLE `degree` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `resolution` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `is_deleted` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `resolution` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `degree`;
 
 DROP TABLE IF EXISTS `degree_subjects`;
 CREATE TABLE `degree_subjects` (
-  `degree_id` int NOT NULL,
-  `subject_id` int NOT NULL,
+  `degree_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
   KEY `fk_degree_subjects_degree1_idx` (`degree_id`),
   KEY `fk_degree_subjects_subject1_idx` (`subject_id`),
   CONSTRAINT `fk_degree_subjects_degree1` FOREIGN KEY (`degree_id`) REFERENCES `degree` (`id`),
   CONSTRAINT `fk_degree_subjects_subject1` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `degree_subjects`;
 
 DROP TABLE IF EXISTS `group`;
 CREATE TABLE `group` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `is_deleted` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `group`;
 INSERT INTO `group` (`id`, `name`, `description`, `is_deleted`) VALUES
@@ -494,73 +524,73 @@ INSERT INTO `group` (`id`, `name`, `description`, `is_deleted`) VALUES
 
 DROP TABLE IF EXISTS `group_permissions`;
 CREATE TABLE `group_permissions` (
-  `group_id` int NOT NULL,
-  `action_id` int NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `action_id` int(11) NOT NULL,
   KEY `fk_group_actions_group1_idx` (`group_id`),
   KEY `fk_group_actions_action1_idx` (`action_id`),
   CONSTRAINT `fk_group_actions_action1` FOREIGN KEY (`action_id`) REFERENCES `action` (`id`),
   CONSTRAINT `fk_group_actions_group1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `group_permissions`;
 
 DROP TABLE IF EXISTS `group_user_members`;
 CREATE TABLE `group_user_members` (
-  `group_id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   KEY `fk_group_user_members_group1_idx` (`group_id`),
   KEY `fk_group_user_members_user1_idx` (`user_id`),
   CONSTRAINT `fk_group_user_members_group1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
   CONSTRAINT `fk_group_user_members_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `group_user_members`;
 
 DROP TABLE IF EXISTS `subject`;
 CREATE TABLE `subject` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `year` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `is_deleted` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `year` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `subject`;
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(256) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `is_deleted` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `user`;
 
 DROP TABLE IF EXISTS `user_information`;
 CREATE TABLE `user_information` (
-  `user_id` int NOT NULL,
-  `name` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `surname` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `dni` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `surname` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
+  `dni` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(75) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `dni_UNIQUE` (`dni`),
   UNIQUE KEY `mail_UNIQUE` (`email`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`),
   KEY `fk_user_information_user_idx` (`user_id`),
   CONSTRAINT `fk_user_information_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `user_information`;
 
 DROP TABLE IF EXISTS `user_session`;
 CREATE TABLE `user_session` (
-  `user_id` int NOT NULL,
-  `token` varchar(256) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
   `created` datetime NOT NULL,
   `expires` datetime NOT NULL,
   PRIMARY KEY (`user_id`),
@@ -568,64 +598,71 @@ CREATE TABLE `user_session` (
   UNIQUE KEY `user_id_UNIQUE` (`user_id`),
   KEY `fk_user_session_user1_idx` (`user_id`),
   CONSTRAINT `fk_user_session_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `user_session`;
 
 DROP VIEW IF EXISTS `view_action`;
-CREATE TABLE `view_action` (`id` int, `name` varchar(75), `description` varchar(128));
+CREATE TABLE `view_action` (`id` int(11), `name` varchar(75), `description` varchar(128));
 
 
 DROP VIEW IF EXISTS `view_degree`;
-CREATE TABLE `view_degree` (`id` int, `name` varchar(75), `description` varchar(128), `resolution` varchar(45));
+CREATE TABLE `view_degree` (`id` int(11), `name` varchar(75), `description` varchar(128), `resolution` varchar(45));
+
+
+DROP VIEW IF EXISTS `view_degree_subjects`;
+CREATE TABLE `view_degree_subjects` (`degree_id` int(11), `name` varchar(75), `description` varchar(128), `resolution` varchar(45), `subject_id` int(11), `year` varchar(45));
 
 
 DROP VIEW IF EXISTS `view_group`;
-CREATE TABLE `view_group` (`id` int, `name` varchar(75), `description` varchar(128));
+CREATE TABLE `view_group` (`id` int(11), `name` varchar(75), `description` varchar(128));
 
 
 DROP VIEW IF EXISTS `view_group_permissions`;
-CREATE TABLE `view_group_permissions` (`group_id` varchar(75), `group_name` varchar(75), `group_description` varchar(128), `action_name` varchar(75), `action_description` varchar(128));
+CREATE TABLE `view_group_permissions` (`group_id` int(11), `group_name` varchar(75), `group_description` varchar(128), `action_id` int(11), `action_name` varchar(75), `action_description` varchar(128));
 
 
 DROP VIEW IF EXISTS `view_group_user_members`;
-CREATE TABLE `view_group_user_members` (`group_id` int, `group_name` varchar(75), `group_description` varchar(128), `username` varchar(75));
+CREATE TABLE `view_group_user_members` (`group_id` int(11), `group_name` varchar(75), `group_description` varchar(128), `username` varchar(75));
 
 
 DROP VIEW IF EXISTS `view_subject`;
-CREATE TABLE `view_subject` (`id` int, `name` varchar(45), `year` varchar(45));
+CREATE TABLE `view_subject` (`id` int(11), `name` varchar(45), `year` varchar(45));
 
 
 DROP VIEW IF EXISTS `view_user`;
-CREATE TABLE `view_user` (`id` int, `username` varchar(75));
+CREATE TABLE `view_user` (`id` int(11), `username` varchar(75));
 
 
 DROP VIEW IF EXISTS `view_user_information`;
-CREATE TABLE `view_user_information` (`user_id` int, `name` varchar(75), `surname` varchar(75), `dni` varchar(45), `email` varchar(75));
+CREATE TABLE `view_user_information` (`user_id` int(11), `name` varchar(75), `surname` varchar(75), `dni` varchar(45), `email` varchar(75));
 
 
 DROP TABLE IF EXISTS `view_action`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_action` AS select `action`.`id` AS `id`,`action`.`name` AS `name`,`action`.`description` AS `description` from `action` where (`action`.`is_deleted` = 0);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_action` AS select `action`.`id` AS `id`,`action`.`name` AS `name`,`action`.`description` AS `description` from `action` where `action`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_degree`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_degree` AS select `degree`.`id` AS `id`,`degree`.`name` AS `name`,`degree`.`description` AS `description`,`degree`.`resolution` AS `resolution` from `degree` where (`degree`.`is_deleted` = '0');
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_degree` AS select `degree`.`id` AS `id`,`degree`.`name` AS `name`,`degree`.`description` AS `description`,`degree`.`resolution` AS `resolution` from `degree` where `degree`.`is_deleted` = '0';
+
+DROP TABLE IF EXISTS `view_degree_subjects`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_degree_subjects` AS select `degree`.`id` AS `degree_id`,`degree`.`name` AS `name`,`degree`.`description` AS `description`,`degree`.`resolution` AS `resolution`,`subject`.`id` AS `subject_id`,`subject`.`year` AS `year` from ((`degree` join `degree_subjects` on(`degree`.`id` = `degree_subjects`.`degree_id`)) join `subject` on(`subject`.`id` = `degree_subjects`.`subject_id`)) where `degree`.`is_deleted` = 0 and `subject`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_group`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group` AS select `group`.`id` AS `id`,`group`.`name` AS `name`,`group`.`description` AS `description` from `group` where (`group`.`is_deleted` = 0);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group` AS select `group`.`id` AS `id`,`group`.`name` AS `name`,`group`.`description` AS `description` from `group` where `group`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_group_permissions`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group_permissions` AS select `group`.`name` AS `group_id`,`group`.`name` AS `group_name`,`group`.`description` AS `group_description`,`action`.`name` AS `action_name`,`action`.`description` AS `action_description` from ((`group` join `group_permissions` on((`group_permissions`.`group_id` = `group`.`id`))) join `action` on((`group_permissions`.`action_id` = `action`.`id`))) where ((`group`.`is_deleted` = 0) and (`action`.`is_deleted` = 0));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group_permissions` AS select `group`.`id` AS `group_id`,`group`.`name` AS `group_name`,`group`.`description` AS `group_description`,`action`.`id` AS `action_id`,`action`.`name` AS `action_name`,`action`.`description` AS `action_description` from ((`group` join `group_permissions` on(`group_permissions`.`group_id` = `group`.`id`)) join `action` on(`group_permissions`.`action_id` = `action`.`id`)) where `group`.`is_deleted` = 0 and `action`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_group_user_members`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group_user_members` AS select `group`.`id` AS `group_id`,`group`.`name` AS `group_name`,`group`.`description` AS `group_description`,`user`.`username` AS `username` from ((`group` join `group_user_members` on((`group`.`id` = `group_user_members`.`group_id`))) join `user` on((`group_user_members`.`user_id` = `user`.`id`))) where ((`group`.`is_deleted` = 0) and (`user`.`is_deleted` = 0));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_group_user_members` AS select `group`.`id` AS `group_id`,`group`.`name` AS `group_name`,`group`.`description` AS `group_description`,`user`.`username` AS `username` from ((`group` join `group_user_members` on(`group`.`id` = `group_user_members`.`group_id`)) join `user` on(`group_user_members`.`user_id` = `user`.`id`)) where `group`.`is_deleted` = 0 and `user`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_subject`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_subject` AS select `subject`.`id` AS `id`,`subject`.`name` AS `name`,`subject`.`year` AS `year` from `subject` where (`subject`.`is_deleted` = '0');
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_subject` AS select `subject`.`id` AS `id`,`subject`.`name` AS `name`,`subject`.`year` AS `year` from `subject` where `subject`.`is_deleted` = '0';
 
 DROP TABLE IF EXISTS `view_user`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_user` AS select `user`.`id` AS `id`,`user`.`username` AS `username` from `user` where (`user`.`is_deleted` = 0);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_user` AS select `user`.`id` AS `id`,`user`.`username` AS `username` from `user` where `user`.`is_deleted` = 0;
 
 DROP TABLE IF EXISTS `view_user_information`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_user_information` AS select `user_information`.`user_id` AS `user_id`,`user_information`.`name` AS `name`,`user_information`.`surname` AS `surname`,`user_information`.`dni` AS `dni`,`user_information`.`email` AS `email` from (`user_information` join `user` on((`user_information`.`user_id` = `user`.`id`))) where (`user`.`is_deleted` = 0);
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_user_information` AS select `user_information`.`user_id` AS `user_id`,`user_information`.`name` AS `name`,`user_information`.`surname` AS `surname`,`user_information`.`dni` AS `dni`,`user_information`.`email` AS `email` from (`user_information` join `user` on(`user_information`.`user_id` = `user`.`id`)) where `user`.`is_deleted` = 0;
 
--- 2022-10-20 19:02:12
+-- 2022-10-20 23:32:26
